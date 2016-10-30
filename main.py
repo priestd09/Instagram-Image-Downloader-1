@@ -83,10 +83,14 @@ with requests.Session() as r:
         conn.commit()
         cur.close()
 
-    def downloadAllUserImages():
-        userNames = getUserNames()
+    def downloadUserImages(userName = None):
+        if (userName is None):
+            userNames = getUserNames()
+        else:
+            userNames = [(userName,)]
         global i
         for user in userNames:
+            print ("Download for", user)
             i = 0
             userName = user[0]
             directory = userName
@@ -127,6 +131,14 @@ with requests.Session() as r:
 
         print ("Added " + userName + " (ID = " + userID + ")")
 
+    def deepSearchDwonloadUser():
+        global deepSearch
+        deepSearch = True
+        showAllUsers()
+        print ("\n")
+        user = input("Enter username : ")
+        downloadUserImages(user)
+
 
     r.get("https://www.instagram.com/accounts/login/")
     login_data = {"username" : EMAIL, "password" : PASSWORD}
@@ -143,14 +155,15 @@ with requests.Session() as r:
         print ("3. Show users")
         print ("4. Enable Deep Search")
         print ("5. Disable Deep Search")
-        print ("6. Exit")
+        print ("6. Deep Search Download User")
+        print ("7. Exit")
         print ("Deep search :", deepSearch, "\n")
         choice = int(input("Enter your choice:"))
         if(choice == 1):
             userName = input("Enter username : ")
             addUser(userName)
         elif (choice == 2):
-            downloadAllUserImages()
+            downloadUserImages()
         elif (choice == 3):
             showAllUsers()
         elif (choice == 4):
@@ -158,6 +171,8 @@ with requests.Session() as r:
         elif (choice == 5):
             toggleDeepSearch(False)
         elif (choice == 6):
+            deepSearchDwonloadUser()
+        elif (choice == 7):
             break;
         else:
             print ("Error : Please enter a valid choice")
