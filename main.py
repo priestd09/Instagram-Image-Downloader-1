@@ -12,6 +12,12 @@ PASSWORD = ""
 with requests.Session() as r:
     i = 0
 
+    deepSearch = False
+
+    def toggleDeepSearch(status):
+        global deepSearch
+        deepSearch = status
+
     def getImages(json_data):
         # Returns True -> Loaded All Images
         # Returns False -> More Images Can Be Loaded
@@ -25,7 +31,7 @@ with requests.Session() as r:
             url = url.split('?')[0]
             url = re.sub(r'/s\d{3,}x\d{3,}/', '/', url)
             if(checkImage(imageID)):
-                if(not deepScan):
+                if(not deepSearch):
                     return True
             else:
                 downloadImage (userName, fileName, url)
@@ -132,11 +138,13 @@ with requests.Session() as r:
 
     while True:
         print ("\n\n WELCOME TO INSTAGRAM DOWNLOADER \n\n")
-
         print ("1. Add a user")
         print ("2. Download data from all users")
         print ("3. Show users")
-        print ("4. Exit")
+        print ("4. Enable Deep Search")
+        print ("5. Disable Deep Search")
+        print ("6. Exit")
+        print ("Deep search :", deepSearch, "\n")
         choice = int(input("Enter your choice:"))
         if(choice == 1):
             userName = input("Enter username : ")
@@ -146,6 +154,10 @@ with requests.Session() as r:
         elif (choice == 3):
             showAllUsers()
         elif (choice == 4):
+            toggleDeepSearch(True)
+        elif (choice == 5):
+            toggleDeepSearch(False)
+        elif (choice == 6):
             break;
         else:
             print ("Error : Please enter a valid choice")
