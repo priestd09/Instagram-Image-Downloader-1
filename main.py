@@ -145,7 +145,6 @@ with requests.Session() as r:
             downloadAllUserImages()
         elif (choice == 3):
             showAllUsers()
-            break;
         elif (choice == 4):
             break;
         else:
