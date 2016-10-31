@@ -38,6 +38,19 @@ with requests.Session() as r:
                 addImage (userID, imageID, link)
         return False
 
+    def downloadProfilePic(json_data):
+        userID = json_data['items'][0]['user']['id']
+        userName = json_data['items'][0]['user']['username']
+        link = json_data['items'][0]['user']['profile_picture']
+        url = re.sub(r'/s\d{3,}x\d{3,}/', '/', link)
+        imageID = re.findall('/([0-9A-Za-z_]+).jpg', url)[0]
+        if(checkImage(imageID)):
+            return False
+        else:
+            downloadImage (userName, imageID, url)
+            addImage (userID, imageID, link)
+            return True
+
     def downloadImage(directory, imageTitle, imageLink):
         os.system("aria2c " + imageLink + " --dir='" + directory + "' --out='" + imageTitle + ".jpg'")
         global i
@@ -90,7 +103,6 @@ with requests.Session() as r:
             userNames = [(userName,)]
         global i
         for user in userNames:
-            print ("Download for", user)
             i = 0
             userName = user[0]
             directory = userName
@@ -103,6 +115,11 @@ with requests.Session() as r:
             url = BASE_URL
 
             json_data = json.loads(r.get(url, cookies = cookies).text)
+
+            #Download Profile picture
+            #Need to be executed once
+            if(downloadProfilePic(json_data)):
+                print ("Downloaded new profile pic for", userName)
 
             doneFlag = getImages(json_data)
             lastID = json_data['items'][-1]['id']
