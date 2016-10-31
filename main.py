@@ -75,11 +75,11 @@ with requests.Session() as r:
     def showAllUsers():
         conn = sqlite3.connect('instagram.db')
         cur = conn.cursor()
-        cur.execute('''Select userName, fullName, count (imageID) FROM User, Image WHERE User.userID = Image.UserID GROUP BY Image.UserID''')
+        cur.execute('''Select userName, fullName FROM User''')
         rows = cur.fetchall()
         print ("Users in Database are : ")
         for row in rows:
-            print (row[0], "\t", row[2], "\t" , row[1])
+            print (row[0], "\t", row[1])
         conn.commit()
         cur.close()
 
